@@ -1,26 +1,25 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.3.2.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-    id "io.freefair.lombok" version "5.1.0"
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id "io.freefair.lombok" version "8.6"
 }
 
-version '1.0-SNAPSHOT'
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
-jar {
-    manifest {
-        attributes(
-                'Main-Class': 'com.javastart.account.AccountApplication'
-        )
-    }
-}
-
 ext {
-    set('springCloudVersion', "Hoxton.SR1")
+    set('springCloudVersion', "2023.0.2")
 }
 
 dependencyManagement {
@@ -30,14 +29,31 @@ dependencyManagement {
 }
 
 dependencies {
-    implementation "org.springframework.boot:spring-boot-starter-web:2.3.2.RELEASE"
-    implementation "org.springframework.boot:spring-boot-starter-actuator:2.3.2.RELEASE"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-    implementation "org.springframework.cloud:spring-cloud-starter-config"
-    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
-    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
-    implementation "org.springframework.cloud:spring-cloud-starter-sleuth"
-    implementation "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
-    implementation "org.postgresql:postgresql:42.2.5"
-    testImplementation "junit:junit:4.1"
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+
+    // Micrometer Tracing с Brave
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
+
+    implementation 'org.postgresql:postgresql:42.7.3'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'org.example.account.AccountApplication'
+        )
+    }
 }
